@@ -1,4 +1,9 @@
 #!/bin/sh
 
 cd $(dirname $0)
-docker kill $(docker ps -a -q --filter="name=$(basename $(pwd))")
+container=$(docker ps -a -q --filter="name=$(basename $(pwd))")
+if [ $container ];then
+	docker kill $container
+else
+	echo "$(basename $(pwd)) already stopped."
+fi

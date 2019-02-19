@@ -1,4 +1,8 @@
 #!/bin/sh
 
 cd $(dirname $0)
-docker run --name $(basename $(pwd)) -d --rm -p 27017:27017 -v $(pwd)/data:/data/db -v $(pwd)/log:/var/log/mongodb mongo:3.4
+if [ $(docker network ls | grep dev | wc -l | xargs) = "0" ];then
+        echo "Create docker network 'dev'."
+        docker network create dev || echo "The docker network 'dev' is already created."
+fi
+docker run --name $(basename $(pwd)) -d --rm --network dev -p 27017:27017 -v $(pwd)/data:/data/db -v $(pwd)/log:/var/log/mongodb mongo:3.4

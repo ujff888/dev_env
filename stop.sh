@@ -5,7 +5,9 @@ if [ $# -eq 0 ];then
 	exit 0
 fi
 
+cd $(dirname $0)
+cwd=$(pwd)
 for i in "$@"; do
-	cd $(dirname $0)
+	cd ${cwd}
 	sh "$(pwd)/$i/stop.sh" || echo "stop $i failed"
 done

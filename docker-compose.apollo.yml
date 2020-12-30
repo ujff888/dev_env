@@ -13,7 +13,8 @@ services:
     command: configservice.jar
     links:
       - mysql:mysql
-    network_mode: host
+    networks: 
+      - dev
     restart: always
 
   adminservice:
@@ -29,7 +30,8 @@ services:
     command: adminservice.jar
     links:
       - mysql:mysql
-    network_mode: host
+    networks: 
+      - dev
     depends_on:
       - configservice
     restart: always
@@ -37,7 +39,7 @@ services:
   portal:
     image: chenchuxin/apollo
     environment:
-      - spring_datasource_url=jdbc:mysql://localhost:3306/ApolloPortalDB?characterEncoding=utf8
+      - spring_datasource_url=jdbc:mysql://mysql:3306/ApolloPortalDB?characterEncoding=utf8
       - spring_datasource_username=root
       - spring_datasource_password=root
       - server.port=8070
@@ -47,7 +49,8 @@ services:
     command: -Ddev_meta=http://localhost:8080 portal.jar
     links:
       - mysql:mysql
-    network_mode: host
+    networks: 
+      - dev
     depends_on:
       - adminservice
     restart: always

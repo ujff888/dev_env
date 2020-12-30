@@ -13,7 +13,7 @@ services:
     command: configservice.jar
     links:
       - mysql
-    network_mode: dev
+    network_mode: host
     restart: always
 
   adminservice:
@@ -29,7 +29,7 @@ services:
     command: adminservice.jar
     links:
       - mysql
-    network_mode: dev
+    network_mode: host
     depends_on:
       - configservice
     restart: always
@@ -47,7 +47,7 @@ services:
     command: -Ddev_meta=http://localhost:8080 portal.jar
     links:
       - mysql
-    network_mode: dev
+    network_mode: host
     depends_on:
       - adminservice
     restart: always

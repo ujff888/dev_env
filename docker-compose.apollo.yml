@@ -1,56 +1,40 @@
-version: "3.4"
+version: '2.1'
+
 services:
-  configservice:
-    image: chenchuxin/apollo
-    environment:
-      - spring_datasource_url=jdbc:mysql://mysql:3306/ApolloConfigDB?characterEncoding=utf8
-      - spring_datasource_username=root
-      - spring_datasource_password=root
-      - logging.file=/opt/logs/configservice.log
-      - server.port=8080
-    volumes:
-      - /var/log/apollo:/opt/logs
-    command: configservice.jar
-    links:
-      - mysql:mysql
-    networks: 
-      - dev
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - ./mysql/docker-healthcheck:/usr/local/bin/docker-healthcheck
+    healthcheck:
+      test: "docker-healthcheck"
+    networks:
+      apollonet:
+        aliases:
+          - db.local
 
-  adminservice:
-    image: chenchuxin/apollo
-    environment:
-      - spring_datasource_url=jdbc:mysql://mysql:3306/ApolloConfigDB?characterEncoding=utf8
-      - spring_datasource_username=root
-      - spring_datasource_password=root
-      - logging.file=/opt/logs/adminservice.log
-      - server.port=8090
-    volumes:
-      - /var/log/apollo:/opt/logs
-    command: adminservice.jar
-    links:
-      - mysql:mysql
-    networks: 
-      - dev
-    depends_on:
-      - configservice
+  apollo:
+    image: logzio/apollo:latest
+    ports:
+      - "8081:8081"
+      - "30001:80"
     restart: always
+    environment:
+      APOLLO_CONFIG_FILEPATH: /root/apollo.conf
+    volumes:
+      - ./apollo.conf:/root/apollo.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      apollonet:
+        aliases:
+          - apollo.local
 
-  portal:
-    image: chenchuxin/apollo
-    environment:
-      - spring_datasource_url=jdbc:mysql://mysql:3306/ApolloPortalDB?characterEncoding=utf8
-      - spring_datasource_username=root
-      - spring_datasource_password=root
-      - server.port=8070
-      - logging.file=/opt/logs/portal.log
-    volumes:
-      - /var/log/apollo:/opt/logs
-    command: -Ddev_meta=http://localhost:8080 portal.jar
-    links:
-      - mysql:mysql
-    networks: 
-      - dev
-    depends_on:
-      - adminservice
-    restart: always
+networks:
+  apollonet:

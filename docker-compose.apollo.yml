@@ -12,7 +12,7 @@ services:
       - /var/log/apollo:/opt/logs
     command: configservice.jar
     links:
-      - mysql
+      - mysql:mysql
     network_mode: host
     restart: always
 
@@ -28,7 +28,7 @@ services:
       - /var/log/apollo:/opt/logs
     command: adminservice.jar
     links:
-      - mysql
+      - mysql:mysql
     network_mode: host
     depends_on:
       - configservice
@@ -46,7 +46,7 @@ services:
       - /var/log/apollo:/opt/logs
     command: -Ddev_meta=http://localhost:8080 portal.jar
     links:
-      - mysql
+      - mysql:mysql
     network_mode: host
     depends_on:
       - adminservice

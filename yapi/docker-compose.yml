@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  yapi:
+    image: registry.cn-hangzhou.aliyuncs.com/anoyi/yapi
+    container_name: yapi
+    workdir: /yapi/vendors
+    volumes:
+      - ./config.json:/yapi/config.json
+    ports:
+      - "3000:3000"
+    links:
+      - mongodb:mongodb

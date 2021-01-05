@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    container_name: chevereto-mysql
+    # 挂载容器中的mysql数据卷到本地database文件夹
+    volumes:
+      - ./database:/var/lib/mysql:rw
+    restart: always
+    networks:
+      - chevereto-net
+    # 设置容器中的mysql的root用户密码以及其他用户
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: chevereto
+      MYSQL_USER: chevereto
+      MYSQL_PASSWORD: chevereto
+    ports:
+     - 9097:3306
+
+  chevereto:
+    depends_on:
+      - db
+    image: nmtan/chevereto
+    container_name: chevereto
+    restart: always
+    networks:
+      - chevereto-net
+    # 设置CHEVERETO_DB的一些参数
+    environment:
+      CHEVERETO_DB_HOST: db
+      CHEVERETO_DB_USERNAME: chevereto
+      CHEVERETO_DB_PASSWORD: chevereto
+      CHEVERETO_DB_NAME: chevereto
+      CHEVERETO_DB_PREFIX: chv_
+    # 挂载容器中的images文件夹到本地的chevereto_images文件夹，以及
+    # 将本地的conf/upload.ini配置文件挂载到容器的/usr/local/etc/php/conf.d/中
+    volumes:
+      - ./chevereto_images:/var/www/html/images:rw
+      - ./conf/upload.ini:/usr/local/etc/php/conf.d/upload.ini:ro
+    # 端口映射，本机:容器，需要配置安全组
+    ports:
+      - 9099:80
+networks:
+  chevereto-net:
+volumes:
+  database:
+  chevereto_images:
+

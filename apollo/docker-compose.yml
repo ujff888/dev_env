@@ -4,6 +4,8 @@ services:
   apollo-quick-start:
     image: nobodyiam/apollo-quick-start
     container_name: apollo-quick-start
+    environment:
+      JAVA_OPTS: "-Xms256m -Xmx1024m"
     depends_on:
       - apollo-db
     ports:

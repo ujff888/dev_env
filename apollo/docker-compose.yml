@@ -15,7 +15,7 @@ services:
       - apollo-db
 
   apollo-db:
-    image: mysql:5.7
+    image: mariadb:latest
     container_name: apollo-db
     environment:
       TZ: Asia/Shanghai

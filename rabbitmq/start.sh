@@ -15,3 +15,5 @@ docker run --name $(basename $(pwd)) -d --restart always \
         -e RABBITMQ_DEFAULT_PASS='qwertyuiop' \
         -e RABBITMQ_LOGS='/var/log/rabbitmq/rabbitmq_logs' \
         -e RABBITMQ_SASL_LOGS='/var/log/rabbitmq/rabbitmq_sasl_logs' docker.io/rabbitmq:3.8-management
+
+#rabbitmq-plugins enable rabbitmq_management

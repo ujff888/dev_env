@@ -4,7 +4,7 @@ docker run -it --rm \
   --workdir /yapi/vendors \
   --network dev \
   -v $PWD/config.json:/yapi/config.json \
-  registry.cn-hangzhou.aliyuncs.com/anoyi/yapi \
+  jpshop/yapi \
   run install-server
 
 docker run -d \
@@ -15,5 +15,13 @@ docker run -d \
   --restart always \
   --network dev \
   -v $PWD/config.json:/yapi/config.json \
-  registry.cn-hangzhou.aliyuncs.com/anoyi/yapi \
+  jpshop/yapi \
   server/app.js
+
+docker run -d \
+  --name yapi \
+  --workdir /yapi/vendors \
+  -p 3001:3000 \
+  --restart always \
+  -v $PWD/config.json:/yapi/config.json \
+  jpshop/yapi

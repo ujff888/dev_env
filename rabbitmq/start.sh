@@ -6,7 +6,7 @@ if [ $(docker network ls | grep dev | wc -l | xargs) = "0" ];then
         docker network create dev || echo "The docker network 'dev' is already created."
 fi
 docker run --name $(basename $(pwd)) -d --restart always \
-        --network dev -p 4369:4369 -p 5671-5672:5671-5672 -p 25672:25672 \
+        --network dev -p 4369:4369 -p 5671-5672:5671-5672 -p 15672:15672 \
         -v $(pwd)/etc:/etc/rabbitmq \
         -v $(pwd)/data:/var/lib/rabbitmq \
         -v $(pwd)/log:/var/log/rabbitmq \
